@@ -1,8 +1,6 @@
 package com.jordy.sorters;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,13 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-
 public class MainActivity extends AppCompatActivity {
 
     private EditText aantalStudentenField;
+    private EditText aantalHerhalingen;
     private TextView bubbleTime;
     private TextView bucketTime;
 
@@ -34,11 +29,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //opgaveEenPuntEen();
-                opgaveTwee();
+                effiëntieSorters();
             }
         });
 
         aantalStudentenField = (EditText) findViewById(R.id.aantalStudenten);
+        aantalHerhalingen = (EditText) findViewById(R.id.aantalHeralingen);
         bubbleTime = (TextView) findViewById(R.id.bubbleTime);
         bucketTime = (TextView) findViewById(R.id.bucketTime);
         //maakStudenten = (Button) findViewById(R.id);
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void opgaveEenPuntEen() {
+    public void testRandomGetallen() {
         final int aantalStudenten = Integer.parseInt(aantalStudentenField.getText().toString());
         final int laagsteCijferInteger = 1;
         final int hoogsteCijferInteger = 10;
@@ -136,13 +132,15 @@ public class MainActivity extends AppCompatActivity {
         return student;
     }
 
-    public void opgaveTwee() {
-        final int repeatTests = 2;
+    public void effiëntieSorters() {
+        final int repeatTests = Integer.parseInt(aantalHerhalingen.getText().toString());
         final int[] inputSizes = new int[1];
         inputSizes[0] = Integer.parseInt(aantalStudentenField.getText().toString());
         //final int inputSize = Integer.parseInt(aantalStudentenField.getText().toString());
         final long[] bucketTimeResult = new long[repeatTests];
         final long[] bubbleTimeResult = new long[repeatTests];
+        long averageBucketTime;
+        long averageBubbleTime;
         long start;
         long end;
         Student[] student;
@@ -165,21 +163,38 @@ public class MainActivity extends AppCompatActivity {
                 bucketSorter.getStudents();
                 end = System.nanoTime();
                 bucketTimeResult[j] = end - start;
-                bucketTime.setText(Long.toString(bucketTimeResult[i]/1000000));
+                //bucketTime.setText(Long.toString(bucketTimeResult[i]/1000000));
 
                 //now bubbleSort measurement
                 start = System.nanoTime();
                 bubbleSorter.bubbleSort(student);
                 end = System.nanoTime();
                 bubbleTimeResult[j] = end - start;
-                bubbleTime.setText(Long.toString(bubbleTimeResult[j]/1000000));
+                //bubbleTime.setText(Long.toString(bubbleTimeResult[j]/1000000));
             }
+            averageBucketTime = gemiddeldeTijd(bucketTimeResult);
+            averageBubbleTime = gemiddeldeTijd(bubbleTimeResult);
+
+            bucketTime.setText(Long.toString(averageBucketTime/1000000));
+            bubbleTime.setText(Long.toString(averageBubbleTime/1000000));
+
             for (int j = 0; j < repeatTests; j++) {
                 System.out.println(j + ";" + inputSizes[i] + ";" + bucketTimeResult[j]/1000000 + ";" + bubbleTimeResult[j]/1000000);
             }
             //print ? safe to futher array?
         }
 
+    }
+
+    public long gemiddeldeTijd(long[] tijd) {
+        long sum = 0;
+        long average;
+        for(int i=0; i<tijd.length; i++) {
+            sum =+ tijd[i];
+        }
+
+        average = sum /tijd.length;
+        return average;
     }
 
 
